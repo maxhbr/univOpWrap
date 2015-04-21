@@ -3,31 +3,21 @@
 import System.Environment   
 import System.Exit
 
-progName, usageString, versionString :: String
+import UnivOpWrap
+import Colors
+
+progName :: String
 progName = "univOpWrap"
-usageString = "Usage: " ++ progName ++ " command [needle ..]"
-versionString = progName ++ " 0.1.0.0"
+usage, version :: IO ()
+usage   = putStrLn $ "Usage: " ++ progName ++ " command [needle ..]"
+version = putStrLn $ progName ++ " 0.1.0.0"
  
 main :: IO ()
 main = let
-    usage   = putStrLn usageString
-    version = putStrLn versionString
-    exit    = exitSuccess
-    die     = exitWith (ExitFailure 1)
-
-    parse ["-h"] = usage   >> exit
-    parse ["-v"] = version >> exit
-    parse []     = die
-    parse (c:ns) = return (getMetaFromCommand c ,ns)
+    parse ["-h"]   = usage
+    parse ["-v"]   = version
+    parse []       = redPrint "No command specified" >> exitWith (ExitFailure 1)
+    parse ["-s",c] = sanitizeMetaFromCommand c
+    parse (c:ns)   = defaultRoutine c ns
   in
-    getArgs >>= parse >>= findBestMatch
-
--- |Obtains the 'meta-info' corresponding to some command
-getMetaFromCommand :: String -> [String]
-getMetaFromCommand _ = []
-
--- |Finds the best match
-findBestMatch :: ([String], [String]) -> IO ()
-findBestMatch (_,ns) = do
-  putStrLn   "No match found"
-  putStrLn $ "The needles were: " ++ unwords ns
+    getArgs >>= parse >> exitSuccess
