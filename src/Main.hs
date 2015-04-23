@@ -14,6 +14,7 @@ version = putStrLn $ progName ++ " 0.1.0.0"
  
 main :: IO ()
 main = let
+    parse :: [String] -> IO ()
     parse ["-h"]   = usage
     parse ["-v"]   = version
     parse []       = redPrint "No command specified" >> exitWith (ExitFailure 1)

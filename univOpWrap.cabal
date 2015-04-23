@@ -17,7 +17,10 @@ cabal-version:       >=1.10
 
 executable univOpWrap
   main-is:             Main.hs
-  -- other-modules:       
+  other-modules:       Colors
+                     , UnivOpWrap
+                     , UnivOpWrap.Meta
+                     , UnivOpWrap.Logic
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8
   hs-source-dirs:      src

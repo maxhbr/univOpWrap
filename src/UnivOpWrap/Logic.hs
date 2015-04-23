@@ -27,8 +27,10 @@ isMatch ns m = let
     and [n `isMatch` m | n <- ns]
 #endif
 
--- |Finds the best match
+-- |Finds the best match or start interactive search
 findBestMatch :: ([String], [String]) -> IO ()
+findBestMatch (ms,[]) = putStrLn $ "no search strings (length ms = " 
+                     ++ yellowShow (length ms) ++ ")"
 findBestMatch (ms,ns) = let 
     matches = [m | m <- ms , ns `isMatch` m]
   in if not (null matches) 
@@ -37,5 +39,3 @@ findBestMatch (ms,ns) = let
       redPrint   "No match found"
       putStrLn $ "The needles were: " ++ unwords ns
       putStrLn $ unlines matches
-
-

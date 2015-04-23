@@ -76,3 +76,17 @@ blueTrace = colorTrace ANSIBlue
 magentaTrace = colorTrace ANSIMagenta
 cyanTrace = colorTrace ANSICyan
 whiteTrace = colorTrace ANSIWhite
+
+--------------------------------------------------------------------------------
+--  Trace colored strings
+colorShow :: Show a => ANSIColor -> a -> String
+colorShow c s = colorString c (show s)
+
+redShow, greenShow, yellowShow, blueShow, magentaShow, cyanShow, whiteShow :: Show a => a -> String
+redShow = colorShow ANSIRed
+greenShow = colorShow ANSIGreen
+yellowShow = colorShow ANSIYellow
+blueShow = colorShow ANSIBlue
+magentaShow = colorShow ANSIMagenta
+cyanShow = colorShow ANSICyan
+whiteShow = colorShow ANSIWhite
