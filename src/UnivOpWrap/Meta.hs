@@ -20,11 +20,14 @@ import System.FilePath
 import Data.List
 import Data.Text (pack, unpack)
 import Data.Text.IO
+import Data.Hashable
 
 import Debug.Trace
 
-saveDir :: String -> FilePath
-saveDir c = "/tmp/univOpWrap/" </> c
+saveDir :: String
+saveDir = "/tmp/univOpWrap/"
+saveFile :: String -> FilePath
+saveFile c = saveDir </> show (hash c)
 
 --------------------------------------------------------------------------------
 --  Data definitions
@@ -63,10 +66,10 @@ loadMeta c = let
       in
         constM' (read (head ws) :: Int) (unwords (tail ws))
   in do
-    ex <- doesFileExist (saveDir c)
+    ex <- doesFileExist (saveFile c)
     if ex
       then do
-        cont <- readFile (saveDir c)
+        cont <- readFile (saveFile c)
         return (map toMeta (lines (unpack cont)))
       else
         return []
@@ -94,8 +97,8 @@ saveMeta :: String -> [Meta] -> IO ()
 saveMeta c ms = let
     format m = show (met m) ++ " " ++ fn m
   in do
-    createDirectoryIfMissing False (saveDir "")
-    writeFile (saveDir c) (pack (unlines (map format ms)))
+    createDirectoryIfMissing False saveDir
+    writeFile (saveFile c) (pack (unlines (map format ms)))
 
 -- |Delets unused / notexistend files
 sanitizeMetaFromCommand :: String -> IO ()
