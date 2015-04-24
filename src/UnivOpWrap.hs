@@ -38,6 +38,7 @@ testRoutine :: String -> [String] -> IO()
 testRoutine c ns = do
   ms <- routine c (unwords ns) (\ m ->
     putStrLn $ yellowString c ++ " " ++ greenString (show m))
+  showMetas ms
   saveMeta c ms
 
 defaultRoutine :: String -> [String] -> IO()

@@ -67,7 +67,7 @@ loadMeta c = let
     if ex
       then do
         cont <- readFile (saveDir c)
-        return (map toMeta (lines (trace (unpack cont) (unpack cont))))
+        return (map toMeta (lines (unpack cont)))
       else
         return []
 
