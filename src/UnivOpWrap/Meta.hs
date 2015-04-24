@@ -24,7 +24,7 @@ import Data.Text.IO
 import Debug.Trace
 
 saveDir :: String -> FilePath
-saveDir c = "/tmp/UnivOpWrap/" </> c
+saveDir c = "/tmp/univOpWrap/" </> c
 
 --------------------------------------------------------------------------------
 --  Data definitions
