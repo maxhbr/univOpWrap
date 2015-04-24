@@ -50,7 +50,33 @@ cyanString = colorString ANSICyan
 whiteString = colorString ANSIWhite
 
 --------------------------------------------------------------------------------
---  Print colored strings
+--  Put colored strings
+colorPutStrLn :: ANSIColor -> String -> IO ()
+colorPutStrLn c = putStrLn . colorString c
+
+redPutStrLn, greenPutStrLn, yellowPutStrLn, bluePutStrLn, magentaPutStrLn, cyanPutStrLn, whitePutStrLn :: String -> IO ()
+redPutStrLn = colorPutStrLn ANSIRed
+greenPutStrLn = colorPutStrLn ANSIGreen
+yellowPutStrLn = colorPutStrLn ANSIYellow
+bluePutStrLn = colorPutStrLn ANSIBlue
+magentaPutStrLn = colorPutStrLn ANSIMagenta
+cyanPutStrLn = colorPutStrLn ANSICyan
+whitePutStrLn = colorPutStrLn ANSIWhite
+
+colorPutStr :: ANSIColor -> String -> IO ()
+colorPutStr c = putStr . colorString c
+
+redPutStr, greenPutStr, yellowPutStr, bluePutStr, magentaPutStr, cyanPutStr, whitePutStr :: String -> IO ()
+redPutStr = colorPutStr ANSIRed
+greenPutStr = colorPutStr ANSIGreen
+yellowPutStr = colorPutStr ANSIYellow
+bluePutStr = colorPutStr ANSIBlue
+magentaPutStr = colorPutStr ANSIMagenta
+cyanPutStr = colorPutStr ANSICyan
+whitePutStr = colorPutStr ANSIWhite
+
+--------------------------------------------------------------------------------
+--  Print colored things
 colorPrint :: Show a => ANSIColor -> a -> IO ()
 colorPrint c = putStrLn . colorString c . show
 

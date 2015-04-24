@@ -20,6 +20,7 @@ main = let
     parse []            = redPrint "No command specified" >> exitWith (ExitFailure 1)
     parse ["-s",c]      = sanitizeMetaFromCommand c
     parse ("-t":(c:ns)) = testRoutine c ns
+    parse ("-a":(c:ns)) = askRoutine c ns
     parse (c:ns)        = defaultRoutine c ns
   in
     getArgs >>= parse >> exitSuccess
