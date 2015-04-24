@@ -20,5 +20,6 @@ main = let
     parse []       = redPrint "No command specified" >> exitWith (ExitFailure 1)
     parse ["-s",c] = sanitizeMetaFromCommand c
     parse (c:ns)   = defaultRoutine c ns
-  in
+  in do
+    yellowPrint $ replicate 80 '#'
     getArgs >>= parse >> exitSuccess

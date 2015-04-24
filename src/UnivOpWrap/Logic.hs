@@ -1,41 +1,41 @@
 --------------------------------------------------------------------------------
--- | 
+-- |
 -- Module      : UnivOpWrap.Logic
--- Note        : 
--- 
--- 
--- 
+-- Note        :
+--
+--
+--
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap.Logic
-  ( findBestMatch
+  ( findMatches
+  , findBestMatch
+  , Meta (..)
   ) where
 
+import UnivOpWrap.Meta
 import Colors
 
--- |Checks, if a file is a match
-isMatch :: [String] -> String -> Bool
-isMatch ns m = let 
-    isMatch' [] _                      = True
-    isMatch' _ []                      = False
-    isMatch' (a:as) (b:bs) | a == b    = isMatch' as bs
-                           | otherwise = isMatch' (a:as) bs
-  in
-#if 1
-    isMatch' (concat ns) m
-#else
-    and [n `isMatch` m | n <- ns]
-#endif
+newtype Matcher = MkMatcher { runMatcher :: [Meta] -> [Meta] }
 
--- |Finds the best match or start interactive search
-findBestMatch :: ([String], [String]) -> IO ()
-findBestMatch (ms,[]) = putStrLn $ "no search strings (length ms = " 
-                     ++ yellowShow (length ms) ++ ")"
-findBestMatch (ms,ns) = let 
-    matches = [m | m <- ms , ns `isMatch` m]
-  in if not (null matches) 
-    then putStrLn $ head matches
-    else do
-      redPrint   "No match found"
-      putStrLn $ "The needles were: " ++ unwords ns
-      putStrLn $ unlines matches
+matchChar :: Char -> Matcher
+matchChar c = let
+    matchCharM Non                  = Non
+    matchCharM M{rs = []}           = Non
+    matchCharM i | head (rs i) == c = i{rs = tail (rs i)
+                                       ,hi = hi i ++ greenString [c]}
+                 | otherwise        = matchCharM i{rs = tail (rs i)
+                                                  ,hi = hi i ++ [head (rs i)]}
+  in MkMatcher $ map matchCharM
+
+matchString :: String -> Matcher
+matchString []     = MkMatcher id
+matchString (c:cs) = MkMatcher $
+  runMatcher (matchString cs) . runMatcher (matchChar c)
+
+findMatches :: ([Meta], String) -> [Meta]
+findMatches (ms,n) = [i | i <- runMatcher (matchString n) ms
+                        , i /= Non]
+
+findBestMatch :: ([Meta], String) -> Meta
+findBestMatch t = minimum (findMatches t)
