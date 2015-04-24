@@ -1,4 +1,4 @@
-At the moment, this is **only an idea**. It can't be used.
+At the moment, this is **only an idea**. It can be used.
 
 univOpWrap:
 -----------
