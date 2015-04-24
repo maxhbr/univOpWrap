@@ -63,13 +63,3 @@ askRoutine c ns = do
         ext <- system $ c ++ " \"" ++ fn m ++ "\""
         yellowPrint ext)
   saveMeta c ms
-     -- do
-     --      putStr $ prompt ++ " y/n: "
-     --      hFlush stdout
-     --      str <- getLine
-     --      case str of
-     --        "y" -> return True
-     --        "n" -> return False
-     --        _   -> do
-     --          putStrLn "Invalid input."
-     --          yesno prompt
