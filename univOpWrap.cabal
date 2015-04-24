@@ -21,8 +21,13 @@ executable univOpWrap
                      , UnivOpWrap
                      , UnivOpWrap.Meta
                      , UnivOpWrap.Logic
+                     , UnivOpWrap.Logic.HeuristikA
+                     , UnivOpWrap.Logic.HeuristikB
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8
                      , directory
+                     , process
+                     , filepath
+                     , text
   hs-source-dirs:      src
   default-language:    Haskell2010

@@ -51,10 +51,10 @@ whiteString = colorString ANSIWhite
 
 --------------------------------------------------------------------------------
 --  Print colored strings
-colorPrint :: ANSIColor -> String -> IO ()
-colorPrint c = putStrLn . colorString c
+colorPrint :: Show a => ANSIColor -> a -> IO ()
+colorPrint c = putStrLn . colorString c . show
 
-redPrint, greenPrint, yellowPrint, bluePrint, magentaPrint, cyanPrint, whitePrint :: String -> IO ()
+redPrint, greenPrint, yellowPrint, bluePrint, magentaPrint, cyanPrint, whitePrint :: Show a => a -> IO ()
 redPrint = colorPrint ANSIRed
 greenPrint = colorPrint ANSIGreen
 yellowPrint = colorPrint ANSIYellow
