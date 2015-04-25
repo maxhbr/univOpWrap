@@ -18,7 +18,7 @@ import System.IO
 import UnivOpWrap.Meta
 import UnivOpWrap.Logic
 import UnivOpWrap.Helper
-import Systom.HsTColors
+import System.HsTColors
 
 routine :: String -> String -> (Meta -> IO()) -> IO[Meta]
 routine c n action = do

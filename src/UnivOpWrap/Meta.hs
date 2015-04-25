@@ -25,7 +25,7 @@ import Data.Hashable
 import Debug.Trace
 
 saveDir :: String
-saveDir = "/tmp/univOpWrap/"
+saveDir = "~/.univOpWrap/"
 saveFile :: String -> FilePath
 saveFile c = saveDir </> show (hash c)
 
