@@ -18,7 +18,7 @@ import System.IO
 import UnivOpWrap.Meta
 import UnivOpWrap.Logic
 import UnivOpWrap.Helper
-import Colors
+import Systom.HsTColors
 
 routine :: String -> String -> (Meta -> IO()) -> IO[Meta]
 routine c n action = do
@@ -40,13 +40,13 @@ routine c n action = do
 defaultRoutine :: String -> [String] -> IO()
 defaultRoutine c ns = do
   ms <- routine c (unwords ns) (\ m -> do
-#if 0
+    putStrLn $ yellowString c ++ " " ++ greenString (show m)
+#if 1
     ext <- system $ c ++ " \"" ++ fn m ++ "\""
 #else
     p <- runCommand $ c ++ " \"" ++ fn m ++ "\""
     ext <- waitForProcess p
 #endif
-    putStrLn $ yellowString c ++ " " ++ greenString (show m)
     yellowPrint ext)
   saveMeta c ms
 

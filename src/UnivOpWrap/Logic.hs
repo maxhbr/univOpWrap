@@ -14,7 +14,7 @@ module UnivOpWrap.Logic
   ) where
 
 import UnivOpWrap.Meta
-import Colors
+import System.HsTColors
 import qualified UnivOpWrap.Logic.HeuristikA as A
 import qualified UnivOpWrap.Logic.HeuristikB as B
 

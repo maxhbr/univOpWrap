@@ -1,12 +1,13 @@
 --------------------------------------------------------------------------------
 -- |
--- Module      : Colors
+-- Module      : System.HsTColors
 -- Note        :
 --
--- Stolen from: https://github.com/schell/steeloverseer/blob/master/src/ANSIColors.hs
+-- see: https://github.com/maximilianhuber/hsTColors
+-- Based on: https://github.com/schell/steeloverseer/blob/master/src/ANSIColors.hs
 --
 --------------------------------------------------------------------------------
-module Colors
+module System.HsTColors
   where
 
 import Debug.Trace (trace)
@@ -34,6 +35,16 @@ instance Show ANSIColor where
                                              , ANSICyan
                                              , ANSIWhite ]
       in "\27[" ++ show (30 + colorNum) ++ "m"
+
+uncolor :: String -> String
+uncolor "" = ""
+uncolor (s:ss) | s == '\27' = let 
+    uncolorDrop ""       = ""
+    uncolorDrop ('m':ss') = ss'
+    uncolorDrop (_:ss')   = uncolorDrop ss'
+  in
+    uncolor (uncolorDrop ss)
+               | otherwise  = s : uncolor ss
 
 --------------------------------------------------------------------------------
 --  String coloring
@@ -104,7 +115,7 @@ cyanTrace = colorTrace ANSICyan
 whiteTrace = colorTrace ANSIWhite
 
 --------------------------------------------------------------------------------
---  Trace colored strings
+--  Show colored things
 colorShow :: Show a => ANSIColor -> a -> String
 colorShow c s = colorString c (show s)
 

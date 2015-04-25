@@ -3,7 +3,7 @@ module UnivOpWrap.Logic.HeuristikA
   ( matchCharM, matchStringM, matchStringMs
   ) where
 
-import Colors
+import System.HsTColors
 import UnivOpWrap.Meta
 import UnivOpWrap.Logic.Common
 

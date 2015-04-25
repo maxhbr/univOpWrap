@@ -4,7 +4,7 @@ module UnivOpWrap.Logic.HeuristikB
   ) where
 
 import Data.List (isPrefixOf)
-import Colors
+import System.HsTColors
 import UnivOpWrap.Meta
 import UnivOpWrap.Logic.Common
 

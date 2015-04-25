@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable univOpWrap
   main-is:             Main.hs
-  other-modules:       Colors
+  other-modules:       System.HsTColors
                      , UnivOpWrap
                      , UnivOpWrap.Meta
                      , UnivOpWrap.Logic

@@ -4,7 +4,7 @@ import System.Environment
 import System.Exit
 
 import UnivOpWrap
-import Colors
+import System.HsTColors
 
 progName :: String
 progName = "univOpWrap"
