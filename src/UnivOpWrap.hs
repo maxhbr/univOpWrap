@@ -17,6 +17,7 @@ import System.Process
 import System.IO
 import UnivOpWrap.Meta
 import UnivOpWrap.Logic
+import UnivOpWrap.Helper
 import Colors
 
 routine :: String -> String -> (Meta -> IO()) -> IO[Meta]
