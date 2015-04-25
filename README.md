@@ -16,7 +16,10 @@ IDEAS/PLANS:
 
 TODO:
 -----
- * nearly all
+ * implement better heuristics
+ * testing
+ * faster?
+ * save as binary file / faster parsing / use a db?
 
 USAGE:
 ------
