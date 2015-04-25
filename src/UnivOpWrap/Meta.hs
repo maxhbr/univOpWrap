@@ -9,6 +9,7 @@
 {-# LANGUAGE CPP #-}
 module UnivOpWrap.Meta
   ( Meta (..), constM, showMetas
+  , cleanPath
   , loadMeta
   , updateMeta, saveMeta
   , sanitizeMetaFromCommand
@@ -17,6 +18,8 @@ module UnivOpWrap.Meta
 import Prelude hiding (readFile, writeFile)
 import System.Directory
 import System.FilePath
+import System.Path.NameManip (guess_dotdot, absolute_path)
+import Data.Maybe (fromJust)
 import Data.List
 import Data.Text (pack, unpack)
 import Data.Text.IO
@@ -52,6 +55,17 @@ instance Show Meta where
 
 showMetas :: [Meta] -> IO()
 showMetas = mapM_ print
+
+--------------------------------------------------------------------------------
+--
+
+cleanPath :: String -> IO String
+cleanPath p | "~" `isPrefixOf` p = do
+    homePath <- getHomeDirectory
+    return $ normalise $ addTrailingPathSeparator homePath ++ tail p
+             | otherwise          = do
+    pathMaybeWithDots <- absolute_path p
+    return $ fromJust $ guess_dotdot pathMaybeWithDots
 
 --------------------------------------------------------------------------------
 --

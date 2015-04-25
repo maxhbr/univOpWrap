@@ -25,8 +25,9 @@ routine c n action = do
   ex <- doesFileExist n
   if ex
     then do
-      action $ constM n
-      return (updateMeta (constM n) meta)
+      f <- cleanPath n
+      action $ constM f
+      return (updateMeta (constM f) meta)
     else do
       let mtch = findBestMatch (meta,n)
       if mtch /= Non
