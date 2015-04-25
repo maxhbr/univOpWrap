@@ -8,7 +8,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap
-  ( defaultRoutine, testRoutine, askRoutine
+  ( defaultRoutine, forkRoutine, testRoutine, askRoutine
   , sanitizeMetaFromCommand
   ) where
 
@@ -37,19 +37,24 @@ routine c n action = do
           return (updateMeta mtch meta)
         else return meta
 
-testRoutine :: String -> [String] -> IO()
-testRoutine c ns = do
-  ms <- routine c (unwords ns) (\ m ->
-    putStrLn $ yellowString c ++ " " ++ greenString (show m))
-  showMetas ms
-  saveMeta c ms
-
 defaultRoutine :: String -> [String] -> IO()
 defaultRoutine c ns = do
   ms <- routine c (unwords ns) (\ m -> do
-    putStrLn $ yellowString c ++ " " ++ greenString (show m)
+#if 0
     ext <- system $ c ++ " \"" ++ fn m ++ "\""
+#else
+    p <- runCommand $ c ++ " \"" ++ fn m ++ "\""
+    ext <- waitForProcess p
+#endif
+    putStrLn $ yellowString c ++ " " ++ greenString (show m)
     yellowPrint ext)
+  saveMeta c ms
+
+forkRoutine :: String -> [String] -> IO()
+forkRoutine c ns = do
+  ms <- routine c (unwords ns) (\ m -> do
+    _ <- runCommand $ c ++ " \"" ++ fn m ++ "\""
+    putStrLn $ yellowString c ++ " " ++ greenString (show m))
   saveMeta c ms
 
 askRoutine :: String -> [String] -> IO()
@@ -64,4 +69,11 @@ askRoutine c ns = do
       _   -> do
         ext <- system $ c ++ " \"" ++ fn m ++ "\""
         yellowPrint ext)
+  saveMeta c ms
+
+testRoutine :: String -> [String] -> IO()
+testRoutine c ns = do
+  ms <- routine c (unwords ns) (\ m ->
+    putStrLn $ yellowString c ++ " " ++ greenString (show m))
+  showMetas ms
   saveMeta c ms

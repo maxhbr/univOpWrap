@@ -15,17 +15,18 @@ matchCharM c = matchStringM [c]
 -- matchCharMs c = map (matchCharM c)
 
 matchStringM :: String -> Meta -> Meta
-matchStringM _ Non             = Non
-matchStringM [] m              = m
-matchStringM _ M{rs = []}      = Non
-matchStringM s m@M{rs=r, hi=h} = let
-    wrds = words s
-    wrd = head wrds
-  in if wrd `isPrefixOf` r
-    then matchStringM (unwords (tail wrds)) m{rs = drop (length wrd) r
-                                             ,hi = h ++ greenString wrd}
-    else matchStringM s m{rs = tail r
-                         ,hi = h ++ [head r]}
+matchStringM s = let
+    matchStringM' :: [String] -> Meta -> Meta
+    matchStringM' _ Non                  = Non
+    matchStringM' [] m                   = m
+    matchStringM' _ M{rs = []}           = Non
+    matchStringM' (w:ws) m@M{rs=r, hi=h} = if w `isPrefixOf` r
+      then matchStringM' ws m{rs = drop (length w) r
+                             ,hi = h ++ greenString w}
+      else matchStringM' (w:ws) m{rs = tail r
+                                 ,hi = h ++ [head r]}
+  in
+    matchStringM' (words s)
 
 matchStringMs :: String -> [Meta] -> [Meta]
 #if 0
