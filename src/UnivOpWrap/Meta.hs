@@ -1,10 +1,10 @@
 --------------------------------------------------------------------------------
--- | 
+-- |
 -- Module      : UnivOpWrap.Meta
--- Note        : 
--- 
--- 
--- 
+-- Note        :
+--
+--
+--
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap.Meta
@@ -21,16 +21,20 @@ import Data.List
 import Data.Text (pack, unpack)
 import Data.Text.IO
 import Data.Hashable
+import UnivOpWrap.Helper
 
 import Debug.Trace
 
-saveDir :: String
-saveDir = "~/.univOpWrap/"
-saveFile :: String -> FilePath
-saveFile c = saveDir </> show (hash c)
+saveDir :: IO String
+saveDir = cleanPath "~/.univOpWrap/"
+saveFile :: String -> IO FilePath
+saveFile c = do
+    s <- saveDir
+    return $ s </> show (hash c)
 
 --------------------------------------------------------------------------------
 --  Data definitions
+
 data Meta = M { met :: Int, fn :: FilePath , rs :: String, hi :: String } | Non
   deriving (Eq)
 
@@ -66,10 +70,11 @@ loadMeta c = let
       in
         constM' (read (head ws) :: Int) (unwords (tail ws))
   in do
-    ex <- doesFileExist (saveFile c)
+    s <- saveFile c
+    ex <- doesFileExist s
     if ex
       then do
-        cont <- readFile (saveFile c)
+        cont <- readFile s
         return (map toMeta (lines (unpack cont)))
       else
         return []
@@ -95,11 +100,21 @@ updateMeta = let
 -- |Writes meta-data to the file corresponding to the given command
 saveMeta :: String -> [Meta] -> IO ()
 saveMeta c ms = let
-    format m = show (met m) ++ " " ++ fn m
+    format Non = ""
+    format m   = show (met m) ++ " " ++ fn m
   in do
-    createDirectoryIfMissing False saveDir
-    writeFile (saveFile c) (pack (unlines (map format ms)))
+    saveDir >>= createDirectoryIfMissing False
+    s <- saveFile c
+    writeFile s $ pack $ unlines $ map format [m | m <- ms, m /= Non]
 
 -- |Delets unused / notexistend files
 sanitizeMetaFromCommand :: String -> IO ()
-sanitizeMetaFromCommand = undefined
+sanitizeMetaFromCommand c = let
+    f Non       = return Non
+    f m@M{fn=f} = do
+      ex <- doesFileExist f
+      if ex
+        then return m
+        else return Non
+  in
+    loadMeta c >>= mapM f >>= saveMeta c

@@ -23,3 +23,16 @@ USAGE:
 Simply add the following to yourt aliasrc:
 
     alias zathura="/PATH/TO/univOpWrap zathura"
+
+or if you do not want to overwrite the command:
+
+    alias p="/PATH/TO/univOpWrap llpp"
+
+if you want the process to detach, use
+
+    alias p="/PATH/TO/univOpWrap -f llpp"
+
+if you want to be asked, wether you realy want to call the command on the file,
+use
+
+    alias p="/PATH/TO/univOpWrap -a llpp"
