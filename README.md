@@ -20,6 +20,7 @@ TODO:
  * testing
  * faster?
  * save as binary file / faster parsing / use a db?
+ * use [vty-ui](https://github.com/jtdaugherty/vty-ui) for an interactive tui
 
 USAGE:
 ------

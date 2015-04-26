@@ -22,8 +22,7 @@ import Data.Text (pack, unpack)
 import Data.Text.IO
 import Data.Hashable
 import UnivOpWrap.Helper
-
-import Debug.Trace
+import System.HsTColors
 
 saveDir :: IO String
 saveDir = cleanPath "~/.univOpWrap/"
@@ -36,13 +35,12 @@ saveFile c = do
 --  Data definitions
 
 data Meta = M { met :: Int, fn :: FilePath , rs :: String, hi :: String } | Non
-  deriving (Eq)
 
-constM :: FilePath -> Meta
-constM = constM' 0
-
-constM' :: Int -> FilePath -> Meta
-constM' i f = M i f f ""
+instance Eq Meta where
+  M{fn=f} == M{fn=f'} = f == f'
+  M{fn=_} == Non      = False
+  Non     == M{fn=_}  = False
+  Non     == Non      = True
 
 instance Ord Meta where
   M{met=m} `compare` M{met=m'} = m' `compare` m
@@ -53,6 +51,12 @@ instance Ord Meta where
 instance Show Meta where
   show Non = "[Non]"
   show m   = hi m ++ rs m ++ " (" ++ show (met m) ++ ")"
+
+constM :: FilePath -> Meta
+constM = constM' 0
+
+constM' :: Int -> FilePath -> Meta
+constM' i fn = M i fn fn ""
 
 showMetas :: [Meta] -> IO()
 showMetas = mapM_ print
@@ -68,7 +72,9 @@ loadMeta c = let
     toMeta s = let
         ws = words s
       in
-        constM' (read (head ws) :: Int) (unwords (tail ws))
+        if length ws >= 2
+          then constM' (read (head ws) :: Int) (unwords (tail ws))
+          else redTrace ("loadMeta: parse-error: " ++ s) Non
   in do
     s <- saveFile c
     ex <- doesFileExist s

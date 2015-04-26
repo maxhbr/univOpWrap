@@ -8,7 +8,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap
-  ( defaultRoutine, forkRoutine, testRoutine, askRoutine
+  ( defaultRoutine, tuiRoutine, forkRoutine, debugRoutine, askRoutine
   , sanitizeMetaFromCommand
   ) where
 
@@ -18,6 +18,7 @@ import System.IO
 import UnivOpWrap.Meta
 import UnivOpWrap.Logic
 import UnivOpWrap.Helper
+import UnivOpWrap.Tui
 import System.HsTColors
 
 routine :: String -> String -> (Meta -> IO()) -> IO[Meta]
@@ -50,6 +51,10 @@ defaultRoutine c ns = do
     yellowPrint ext)
   saveMeta c ms
 
+-- TODO: insert given needles?
+tuiRoutine :: String -> [String] -> IO()
+tuiRoutine c _ = loadMeta c >>= runTui c
+
 forkRoutine :: String -> [String] -> IO()
 forkRoutine c ns = do
   ms <- routine c (unwords ns) (\ m -> do
@@ -71,8 +76,8 @@ askRoutine c ns = do
         yellowPrint ext)
   saveMeta c ms
 
-testRoutine :: String -> [String] -> IO()
-testRoutine c ns = do
+debugRoutine :: String -> [String] -> IO()
+debugRoutine c ns = do
   ms <- routine c (unwords ns) (\ m ->
     putStrLn $ yellowString c ++ " " ++ greenString (show m))
   showMetas ms

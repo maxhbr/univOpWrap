@@ -19,8 +19,10 @@ main = let
     parse ["-v"]        = version
     parse []            = redPrint "No command specified" >> exitWith (ExitFailure 1)
     parse ["-s",c]      = sanitizeMetaFromCommand c
+    parse ["-t",c]      = tuiRoutine c []
+    parse ("-t":(c:ns)) = parse (c:ns)
     parse ("-f":(c:ns)) = forkRoutine c ns
-    parse ("-t":(c:ns)) = testRoutine c ns
+    parse ("-d":(c:ns)) = debugRoutine c ns
     parse ("-a":(c:ns)) = askRoutine c ns
     parse (c:ns)        = defaultRoutine c ns
   in

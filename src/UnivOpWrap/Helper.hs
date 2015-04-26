@@ -3,8 +3,6 @@
 -- Module      : UnivOpWrap.Helper
 -- Note        : 
 -- 
--- partly stolen from:
--- https://www.fpcomplete.com/user/dshevchenko/cookbook/transform-relative-path-to-an-absolute-path
 --
 --------------------------------------------------------------------------------
 
@@ -22,6 +20,8 @@ import Data.List (isPrefixOf)
 --
 
 -- |makes paths absolute
+-- partly stolen from:
+-- https://www.fpcomplete.com/user/dshevchenko/cookbook/transform-relative-path-to-an-absolute-path
 cleanPath :: String -> IO String
 cleanPath p | "~" `isPrefixOf` p = do
     homePath <- getHomeDirectory
