@@ -23,9 +23,10 @@ executable univOpWrap
                      , UnivOpWrap.Logic
                      , UnivOpWrap.Logic.HeuristikA
                      , UnivOpWrap.Logic.HeuristikB
-  other-extensions:    CPP
+  other-extensions:    CPP, QuasiQuotes, DataKinds
   build-depends:       base >=4.7 && <4.8
                      , directory
+                     , time
                      , process
                      , filepath
                      , text

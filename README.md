@@ -20,6 +20,7 @@ TODO:
  * testing
  * faster?
  * save as binary file / faster parsing / use a db?
+ * use cereal for faster / real serialization
 
 USAGE:
 ------
