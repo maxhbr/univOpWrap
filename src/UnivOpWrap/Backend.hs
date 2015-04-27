@@ -11,7 +11,7 @@ import System.FilePath
 import Data.List
 import Data.Maybe
 import Data.Text (pack, unpack)
-import Data.Text.IO
+import Data.Text.IO hiding (putStrLn)
 import UnivOpWrap.Common
 
 -- |Obtains the 'meta-info' corresponding to some command
@@ -37,14 +37,14 @@ updateInfo m i@I{md=ms} = let
     mUp   = (+ 100)
 
     updateMData' :: MData -> [MData] -> [MData]
-    updateMData' (Non _) []                       = []
-    updateMData' n@(Non _) (m':ms)                = m'{met' = mDown (met m')}
-                                                  : updateMData' n ms
-    updateMData' m []                             = [m]
-    updateMData' m@M{fn'=f} (m':ms) | f == fn m'  = m'{met' = mUp (met m')}
-                                                  : updateMData' (Non m) ms
-                                    | otherwise   = m'{met' = mDown (met m')}
-                                                  : updateMData' m ms
+    updateMData' (Non _) []            = []
+    updateMData' n@(Non _) (m':ms)     = m'{met' = mDown (met m')}
+                                       : updateMData' n ms
+    updateMData' m []                  = [m]
+    updateMData' m (m':ms) | m == m'   = m'{met' = mUp (met m')}
+                                       : updateMData' (Non m) ms
+                           | otherwise = m'{met' = mDown (met m')}
+                                       : updateMData' m ms
   in
     i { md = sort (updateMData' m ms)}
 
@@ -56,7 +56,7 @@ saveInfo i@I{sf=s,md=m} = do
 updAndSvInfo :: MData -> Info -> IO()
 updAndSvInfo m = saveInfo . updateInfo m
 
--- -- |Delets unused / notexistend files
+-- |Delets unused / notexistend files
 sanitizeInfo :: Info -> IO ()
 sanitizeInfo = undefined
 --     f Non       = return Non

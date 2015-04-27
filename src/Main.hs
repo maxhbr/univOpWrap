@@ -1,6 +1,6 @@
 #!/usr/bin/env runhaskell
 
-import System.Environment   
+import System.Environment
 import System.Exit
 
 import UnivOpWrap
@@ -11,7 +11,7 @@ progName = "univOpWrap"
 usage, version :: IO ()
 usage   = putStrLn $ "Usage: " ++ progName ++ " command [needle ..]"
 version = putStrLn $ progName ++ " 0.1.0.0"
- 
+
 main :: IO ()
 main = let
     parse :: [String] -> IO ()
@@ -22,6 +22,6 @@ main = let
     -- parse ("-f":(c:ns)) = forkRoutine c ns
     -- parse ("-t":(c:ns)) = testRoutine c ns
     -- parse ("-a":(c:ns)) = askRoutine c ns
-    -- parse (c:ns)        = defaultRoutine c ns
+    parse (c:ns)        = univOpWrap c ns
   in
     getArgs >>= parse >> exitSuccess

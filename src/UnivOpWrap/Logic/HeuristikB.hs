@@ -1,12 +1,12 @@
 {-# LANGUAGE CPP #-}
 module UnivOpWrap.Logic.HeuristikB
-  ( matchCharM, matchStringM, matchStringMs
+  ( -- matchCharM, matchStringM, matchStringMs
   ) where
 
 import Data.List (isPrefixOf)
 import System.HsTColors
-import UnivOpWrap.Meta
-import UnivOpWrap.Logic.Common
+import UnivOpWrap.Common
+-- import UnivOpWrap.Logic.Common
 
 matchCharM :: Char -> Meta -> Meta
 matchCharM c = matchStringM [c]

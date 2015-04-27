@@ -2,22 +2,26 @@ module UnivOpWrap.Common
   ( saveFile
   , Info (..)
   , Command (..)
-  , MData (..), fn, pr, pr1, pr2, met, lst
+  , MData (..), fn, pr, pr1, pr2, met, lst, isNotNon
   , newMData, mToLine, mFromLine
+  , cleanPath
   )where
 
 import Prelude hiding (readFile, writeFile)
 import System.FilePath
 -- import Data.Text
 import Data.Time.Clock
--- import System.Directory
+import System.Directory (getHomeDirectory)
 import Data.List
 -- import Data.Text (pack, unpack)
 -- import Data.Text.IO
 import Data.Hashable
-import UnivOpWrap.Helper
+import System.Path.NameManip (guess_dotdot, absolute_path)
+import Data.Maybe (fromJust)
 
 import UnivOpWrap.Config
+import System.HsTColors
+
 
 saveFile :: Command -> IO FilePath
 saveFile (C c) = do
@@ -30,10 +34,12 @@ saveFile (C c) = do
 data Info = I { cm :: Command  -- the command
               , sf :: FilePath -- the path, where the MData is saved
               , md :: [MData]  -- the corresponding MData
-              }
+              } deriving (Show)
  
 data Command = C FilePath
-  deriving (Eq,Show)
+  deriving (Eq)
+instance Show Command where
+    show (C c) = c
 
 data MData = M { fn'  :: FilePath        -- path of file
                , pr'  :: (String,String) -- start + end
@@ -60,6 +66,10 @@ lst m@M{lst'=d}       = d
 lst (Non m@M{lst'=d}) = d
 lst (Non (Non _))     = error "MData should not be nested"
 
+isNotNon :: MData -> Bool
+isNotNon m@M{}   = True
+isNotNon (Non _) = False
+
 instance Eq MData where
   M{fn'=f} == M{fn'=f'} = f' == f
   Non _    == M{}       = False
@@ -80,9 +90,10 @@ instance Show MData where
 --  Functions
 
 newMData :: FilePath -> Int -> IO MData
-newMData f _ = do
+newMData f i = do
+  f' <- cleanPath f
   t <- getCurrentTime
-  return $ M f ("",f) 0 t
+  return $ M f ("",f') i t
 
 mToLine :: MData -> String
 mToLine m = unwords [ show (utctDay (lst m))
@@ -93,12 +104,21 @@ mToLine m = unwords [ show (utctDay (lst m))
 mFromLine :: String -> Maybe MData
 mFromLine l = let
     ws = words l
-  in if length ws > 3
+  in if length ws >= 3
     then let
         f = unwords (drop 2 ws)
       in Just M { fn'  = f
-           , pr'  = ("",f)
-           , met' = read (ws!!1)
-           , lst' = read (show (head ws) ++ " 00:00:00.00000 UTC")
-           }
+                , pr'  = ("",f)
+                , met' =  read (ws!!1)
+                , lst' = read (head ws ++ " 00:00:00.00000 UTC")
+                }
     else Nothing
+
+-- |makes paths absolute
+cleanPath :: String -> IO String
+cleanPath p | "~" `isPrefixOf` p = do
+    homePath <- getHomeDirectory
+    return $ normalise $ addTrailingPathSeparator homePath ++ tail p
+             | otherwise          = do
+    pathMaybeWithDots <- absolute_path p
+    return $ fromJust $ guess_dotdot pathMaybeWithDots

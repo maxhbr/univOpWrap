@@ -8,20 +8,55 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap
-  ( t
-  -- defaultRoutine, forkRoutine, testRoutine, askRoutine
-  -- , sanitizeMetaFromCommand
+  ( univOpWrap
   ) where
 
 import System.Directory
 import System.Process
 import System.IO
 import System.HsTColors
+import Control.Monad (when,liftM)
+import Data.Foldable (forM_)
 
 import UnivOpWrap.Common
 import UnivOpWrap.Backend
+import UnivOpWrap.Logic
 
-t = newMData "bla" 0
+univOpWrap :: String -> [String] -> IO()
+univOpWrap c args = do
+    (i,ph) <- getInfo (C c) >>= defaultRoutine (unwords args)
+    saveInfo =<< showInfo i
+    forM_ ph waitForProcess
+
+showInfo :: Info -> IO Info
+showInfo i = print i >> return i
+
+defaultRoutine :: String -> Info -> IO (Info, Maybe ProcessHandle)
+defaultRoutine arg i = do
+    ex <- doesFileExist arg
+    mtch <- if ex
+      then newMData arg 100
+      else return $ findBestMatch arg i
+    case mtch of
+      Non _ -> return (i, Nothing)
+      _     -> do
+        ph <- runCmd True (cm i) mtch
+        return (updateInfo mtch i, ph)
+
+runCmd :: Bool -> Command -> MData -> IO(Maybe ProcessHandle)
+runCmd b c m = let
+    l = show c ++ " \"" ++ fn m ++ "\""
+  in do
+    putStrLn l
+    ans <- if b
+      then do
+        putStr " [Y/n]: "
+        hFlush stdout
+        getLine
+      else return "y"
+    case ans of
+      "n" -> return Nothing
+      _   -> liftM Just (runCommand l)
 
 -- routine :: String -> String -> (Meta -> IO()) -> IO[Meta]
 -- routine c n action = do
@@ -66,8 +101,8 @@ t = newMData "bla" 0
 --     putStrLn $ yellowString c ++ " " ++ greenString (show m)
 --     putStr " [Y/n]: "
 --     hFlush stdout
---     str <- getLine
---     case str of
+--     ans <- getLine
+--     case ans of
 --       "n" -> redPutStrLn "abort"
 --       _   -> do
 --         ext <- system $ c ++ " \"" ++ fn m ++ "\""
