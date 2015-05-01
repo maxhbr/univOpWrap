@@ -8,40 +8,23 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap.Logic
-  ( findMatches
-  , findBestMatch
+  ( findMatches,   findMatchesI
+  , findBestMatch, findBestMatchI
   ) where
 
 import System.HsTColors
 import UnivOpWrap.Common
--- import qualified UnivOpWrap.Logic.HeuristikA as A
--- import qualified UnivOpWrap.Logic.HeuristikB as B
+import UnivOpWrap.Logic.Common
+import qualified UnivOpWrap.Logic.HeuristikA as A
+import qualified UnivOpWrap.Logic.HeuristikB as B
 
-concatMatcherMs :: (a -> Info -> Info)
-                -> (a -> Info -> Info)
-                -> a -> Info -> Info
-concatMatcherMs = undefined
+findMatchesI :: String -> Info -> Info
+findMatchesI s i@I{md=ms} = i{md = findMatches s ms}
+findBestMatchI :: String -> Info -> MData
+findBestMatchI s = findBestMatch s . md
 
-findMatches :: String -> Info -> Info
-findMatches _ = id
+findMatches :: String -> [MData] -> [MData]
+findMatches = concatMatcherMs B.matchStringMs A.matchStringMs
 
-findBestMatch:: String -> Info -> MData
-findBestMatch _ i@I{md=m} = head m
-
--- matchStringMs = concatMatcherMs B.matchStringMs A.matchStringMs
-
--- findMatches :: ([Meta], String) -> [Meta]
--- #if 0
--- -- This variant might be usefull in the interactive case. It has transposed
--- -- lazyness
--- findMatches (ms,n) = [m | m <- A.matchStringMs n ms, m /= Non]
--- #else
--- findMatches (ms,n) = [m | m <- matchStringMs n ms, m /= Non]
--- #endif
-
--- findBestMatch :: ([Meta], String) -> Meta
--- findBestMatch (ms,n) = let
---     mtches = [m | m <- matchStringMs n ms, m /= Non]
---   in if not (null mtches)
---     then head mtches
---     else Non
+findBestMatch:: String -> [MData] -> MData
+findBestMatch s ms = head [m | m <- findMatches s ms, isNotNon m]

@@ -36,7 +36,7 @@ defaultRoutine arg i = do
     ex <- doesFileExist arg
     mtch <- if ex
       then newMData arg 100
-      else return $ findBestMatch arg i
+      else return $ findBestMatchI arg i
     case mtch of
       Non _ -> return (i, Nothing)
       _     -> do
