@@ -15,7 +15,7 @@ import System.Directory
 import System.Process
 import System.IO
 import System.HsTColors
-import Control.Monad (unless,liftM)
+import Control.Monad (when,unless,liftM)
 import Data.Foldable (forM_)
 import Data.Maybe
 
@@ -30,11 +30,9 @@ univOpWrap p = do
       p@P{list = True} -> mapM_ print $ md i
       _                -> do
         (i',ph) <- defaultRoutine (ask p) (unwords (argsP p)) i
-        saveInfo =<< showInfo i'
+        _ <- when (dbg p) (print i')
+        saveInfo i'
         unless (fork p) $ forM_ ph waitForProcess
-
-showInfo :: Info -> IO Info
-showInfo i = print i >> return i
 
 defaultRoutine :: Bool -> String -> Info -> IO (Info, Maybe ProcessHandle)
 defaultRoutine b arg i = do

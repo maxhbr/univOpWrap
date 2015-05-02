@@ -25,6 +25,7 @@ main = let
     parse p ("-f":args) = parse p{fork=True} args
     parse p ("-l":args) = parse p{list=True} args
     parse p ("-a":args) = parse p{ask=True} args
+    parse p ("-d":args) = parse p{dbg=True} args
     parse p (a:args)    | isNothing (cmP p) = parse p{cmP=Just (C a)} args
                         | otherwise         = parse p{argsP=argsP p ++ [a]} args
     parse p []          | isNothing (cmP p) = redPrint "No command specified" >> exitWith (ExitFailure 1)

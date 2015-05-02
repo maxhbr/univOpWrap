@@ -36,9 +36,10 @@ data Parameter = P { cmP :: Maybe Command
                    , argsP :: [String]
                    , list :: Bool
                    , fork :: Bool
-                   , ask :: Bool }
+                   , ask :: Bool
+                   , dbg :: Bool }
 defaultParameter :: Parameter
-defaultParameter = P Nothing [] False False False
+defaultParameter = P Nothing [] False False False False
 
 data Info = I { cm :: Command  -- the command
               , sf :: FilePath -- the path, where the MData is saved
