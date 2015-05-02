@@ -2,48 +2,54 @@
 {-# LANGUAGE CPP #-}
 
 module System.UnivOpWrap.Tui 
-  where
-  -- ( runTui
-  -- ) where
+  ( runTui
+  ) where
 
--- import Graphics.Vty hiding (Button)
--- import Graphics.Vty.Widgets.All
--- import Data.Text hiding (head)
+import Graphics.Vty hiding (Button)
+import Graphics.Vty.Widgets.All
+import Data.Text hiding (head)
+import System.Exit ( exitSuccess )
 
--- import UnivOpWrap.Meta
+import System.UnivOpWrap.Common
 
--- runTui :: String -> [Meta] -> IO()
--- runTui c ms = let 
---     genTui = do
---       e <- editWidget
--- #if 1
---       -- TODO: textList is false?
---       lst <- newTextList [] 1
---       mapM_ (addMeta lst) ms
--- #else
---       lst' <- multiLineEditWidget
---       lst <- bordered =<< boxFixed 60 20 lst'
--- #endif
---       fg <- newFocusGroup
---       _ <- addToFocusGroup fg e
---       _ <- addToFocusGroup fg lst
---       be <- bordered =<< boxFixed 60 1 e
---       c <- centered =<< ( plainText (pack $ c ++ ":")
---                      <--> return be
---                      <--> plainText "Files:"
---                      <--> return lst)
---       coll <- newCollection
---       _ <- addToCollection coll c fg
---       return (coll, fg, lst)
---     addMeta _ Non         = return ()
---     addMeta lst m@M{fn=f} = plainText (pack f) >>= addToList lst "unused"
---   in do
---     (coll,fg,lst) <- genTui
---     fg `onKeyPressed` \_ k _ ->
---       case k of
---         KEsc -> shutdownUi >> return True
---         _ -> return False
---     runUi coll $ defaultContext { focusAttr = fgColor yellow }
+runTui :: String -> Info -> IO(Maybe MData)
+runTui _ i = let
+    genTui = do
+      e <- editWidget
+#if 1
+      -- TODO: textList is false?
+      lst <- newTextList [] 1
+      mapM_ (addMeta lst) (md i)
+#else
+      lst' <- multiLineEditWidget
+      lst <- bordered =<< boxFixed 60 20 lst'
+#endif
+      fg <- newFocusGroup
+      _ <- addToFocusGroup fg e
+      _ <- addToFocusGroup fg lst
+      be <- bordered =<< boxFixed 60 1 e
+      c <- centered =<< ( plainText (pack $ show (cm i) ++ ":")
+                     <--> return be
+                     <--> plainText "Files:"
+                     <--> return lst)
+      coll <- newCollection
+      _ <- addToCollection coll c fg
+      return (coll, fg, lst)
+    addMeta _ (Non _)      = return ()
+    addMeta lst m@M{fn'=f} = plainText (pack f) >>= addToList lst "unused"
+  in do
+    (coll,fg,lst) <- genTui
+    fg `onKeyPressed` \_ k _ ->
+      case k of
+        KEsc -> shutdownUi >> return True
+        _ -> return False
+
+    lst `onKeyPressed` \_ k _ -> do
+      case k of
+        (KChar 'q') -> exitSuccess
+        _ -> return False
+    runUi coll $ defaultContext { focusAttr = fgColor yellow }
+    return Nothing
 
 -- -- module Main where
 

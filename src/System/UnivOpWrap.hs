@@ -23,6 +23,7 @@ import Data.Maybe
 import System.UnivOpWrap.Common as X
 import System.UnivOpWrap.Backend
 import System.UnivOpWrap.Logic
+import System.UnivOpWrap.Tui
 
 univOpWrap :: Parameter -> IO()
 univOpWrap p = do
@@ -30,7 +31,9 @@ univOpWrap p = do
     case p of
       p@P{list = True} -> mapM_ print $ md i
       _                -> do
-        (i',ph) <- defaultRoutine (ask p) (unwords (argsP p)) i
+        (i',ph) <- if tui p && null (argsP p)
+                     then tuiRoutine (ask p) i
+                     else defaultRoutine (ask p) (unwords (argsP p)) i
         _ <- when (dbg p) (print i')
         saveInfo i'
         unless (fork p) $ forM_ ph waitForProcess
@@ -48,6 +51,11 @@ defaultRoutine b arg i = do
       _     -> do
         ph <- runCmd b (cm i) mtch
         return (updateInfo mtch i, ph)
+
+tuiRoutine :: Bool -> Info -> IO(Info, Maybe ProcessHandle)
+tuiRoutine _ i = do
+    _ <- runTui [] i
+    return undefined
 
 runCmd :: Bool -> Command -> MData -> IO(Maybe ProcessHandle)
 runCmd b c m = let
