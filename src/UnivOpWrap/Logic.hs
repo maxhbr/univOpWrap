@@ -17,7 +17,6 @@ import UnivOpWrap.Common
 import UnivOpWrap.Logic.Common
 import qualified UnivOpWrap.Logic.HeuristikA as A
 import qualified UnivOpWrap.Logic.HeuristikB as B
-import qualified UnivOpWrap.Logic.HeuristikBfn as Bfn
 
 findMatchesI :: String -> Info -> Info
 findMatchesI s i@I{md=ms} = i{md = findMatches s ms}
@@ -25,8 +24,7 @@ findBestMatchI :: String -> Info -> MData
 findBestMatchI s = findBestMatch s . md
 
 findMatches :: String -> [MData] -> [MData]
-findMatches = concatMatcherMs Bfn.matchStringMs 
-                              (concatMatcherMs B.matchStringMs A.matchStringMs)
+findMatches = concatMatcherMs (firstFilenameMs B.matchStringMs) A.matchStringMs
 
 findBestMatch:: String -> [MData] -> MData
 findBestMatch s ms = head [m | m <- findMatches s ms, isNotNon m]
