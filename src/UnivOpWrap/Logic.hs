@@ -12,6 +12,7 @@ module UnivOpWrap.Logic
   , findBestMatch, findBestMatchI
   ) where
 
+import System.FilePath
 import System.HsTColors
 import UnivOpWrap.Common
 import qualified UnivOpWrap.Logic.HeuristikA as A

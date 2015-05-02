@@ -23,7 +23,6 @@ executable univOpWrap
                      , UnivOpWrap.Common
                      , UnivOpWrap.Config
                      , UnivOpWrap.Logic
-                     , UnivOpWrap.Logic.Common
                      , UnivOpWrap.Logic.HeuristikA
                      , UnivOpWrap.Logic.HeuristikB
   other-extensions:    CPP, QuasiQuotes, DataKinds
