@@ -11,7 +11,9 @@ import System.HsTColors
 progName :: String
 progName = "univOpWrap"
 usage, version :: IO ()
-usage   = putStrLn $ "Usage: " ++ progName ++ " command [needle ..]"
+usage   = putStrLn $ unlines
+  [ "Usage: " ++ progName ++ " [-f] [-a] cmd [-l] [-h] [arg [arg [ ...]]]"
+  , "Written by: Maximilian Huber (mail@maximilian-huber.de)" ]
 version = putStrLn $ progName ++ " 0.1.0.0"
 
 main :: IO ()

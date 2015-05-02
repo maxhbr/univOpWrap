@@ -24,6 +24,9 @@ TODO:
 
 USAGE:
 ------
+
+    /PATH/TO/univOpWrap [-f] [-a] cmd [-l] [-h] [arg [arg [ ...]]]
+
 Simply add the following to yourt aliasrc:
 
     alias zathura="/PATH/TO/univOpWrap zathura"
