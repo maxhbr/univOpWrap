@@ -1,4 +1,4 @@
-module UnivOpWrap.Config
+module System.UnivOpWrap.Config
   where
 
 saveDir :: String

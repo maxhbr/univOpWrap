@@ -1,4 +1,4 @@
-module UnivOpWrap.Backend
+module System.UnivOpWrap.Backend
   ( getInfo
   , updateInfo
   , saveInfo
@@ -12,7 +12,7 @@ import Data.List
 import Data.Maybe
 import Data.Text (pack, unpack)
 import Data.Text.IO hiding (putStrLn)
-import UnivOpWrap.Common
+import System.UnivOpWrap.Common
 
 -- |Obtains the 'meta-info' corresponding to some command
 getInfo :: Command -> IO Info

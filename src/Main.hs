@@ -4,8 +4,7 @@ import System.Environment
 import System.Exit
 import Data.Maybe
 
-import UnivOpWrap
-import UnivOpWrap.Common
+import System.UnivOpWrap
 import System.HsTColors
 
 progName :: String

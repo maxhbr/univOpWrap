@@ -1,11 +1,11 @@
 {-# LANGUAGE CPP #-}
-module UnivOpWrap.Logic.HeuristikB
+module System.UnivOpWrap.Logic.HeuristikB
   ( matchStringM, matchStringMs
   ) where
 
 import Data.List (isPrefixOf)
 import System.HsTColors
-import UnivOpWrap.Common
+import System.UnivOpWrap.Common
 
 matchStringM :: String -> MData -> MData
 matchStringM s = let

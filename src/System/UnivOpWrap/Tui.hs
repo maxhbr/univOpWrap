@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE CPP #-}
 
-module UnivOpWrap.Tui 
+module System.UnivOpWrap.Tui 
   where
   -- ( runTui
   -- ) where

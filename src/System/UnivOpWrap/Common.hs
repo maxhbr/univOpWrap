@@ -1,4 +1,4 @@
-module UnivOpWrap.Common
+module System.UnivOpWrap.Common
   ( saveFile
   , Parameter (..), defaultParameter
   , Info (..)
@@ -17,7 +17,7 @@ import Data.Hashable
 import System.Path.NameManip (guess_dotdot, absolute_path)
 import Data.Maybe
 
-import UnivOpWrap.Config
+import System.UnivOpWrap.Config
 import System.HsTColors
 
 

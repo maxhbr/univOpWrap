@@ -7,8 +7,9 @@
 --
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
-module UnivOpWrap
+module System.UnivOpWrap
   ( univOpWrap
+  , module X
   ) where
 
 import System.Directory
@@ -19,9 +20,9 @@ import Control.Monad (when,unless,liftM)
 import Data.Foldable (forM_)
 import Data.Maybe
 
-import UnivOpWrap.Common
-import UnivOpWrap.Backend
-import UnivOpWrap.Logic
+import System.UnivOpWrap.Common as X
+import System.UnivOpWrap.Backend
+import System.UnivOpWrap.Logic
 
 univOpWrap :: Parameter -> IO()
 univOpWrap p = do

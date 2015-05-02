@@ -18,13 +18,13 @@ cabal-version:       >=1.10
 executable univOpWrap
   main-is:             Main.hs
   other-modules:       System.HsTColors
-                     , UnivOpWrap
-                     , UnivOpWrap.Backend
-                     , UnivOpWrap.Common
-                     , UnivOpWrap.Config
-                     , UnivOpWrap.Logic
-                     , UnivOpWrap.Logic.HeuristikA
-                     , UnivOpWrap.Logic.HeuristikB
+                     , System.UnivOpWrap
+                     , System.UnivOpWrap.Backend
+                     , System.UnivOpWrap.Common
+                     , System.UnivOpWrap.Config
+                     , System.UnivOpWrap.Logic
+                     , System.UnivOpWrap.Logic.HeuristikA
+                     , System.UnivOpWrap.Logic.HeuristikB
   other-extensions:    CPP, QuasiQuotes, DataKinds
   build-depends:       base >=4.7 && <4.8
                      , directory

@@ -1,10 +1,10 @@
 {-# LANGUAGE CPP #-}
-module UnivOpWrap.Logic.HeuristikA
+module System.UnivOpWrap.Logic.HeuristikA
   ( matchStringM, matchStringMs
   ) where
 
 import System.HsTColors
-import UnivOpWrap.Common
+import System.UnivOpWrap.Common
 
 matchCharM :: Char -> MData -> MData
 matchCharM _ m@(Non _)                         = m
