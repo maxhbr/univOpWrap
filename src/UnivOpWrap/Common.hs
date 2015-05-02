@@ -1,5 +1,6 @@
 module UnivOpWrap.Common
   ( saveFile
+  , Parameter (..), defaultParameter
   , Info (..)
   , Command (..)
   , MData (..), fn, pr, pr1, pr2, met, lst, isNotNon
@@ -17,7 +18,7 @@ import Data.List
 -- import Data.Text.IO
 import Data.Hashable
 import System.Path.NameManip (guess_dotdot, absolute_path)
-import Data.Maybe (fromJust)
+import Data.Maybe
 
 import UnivOpWrap.Config
 import System.HsTColors
@@ -30,6 +31,14 @@ saveFile (C c) = do
 
 --------------------------------------------------------------------------------
 --  Data definitions
+
+data Parameter = P { cmP :: Maybe Command
+                   , argsP :: [String]
+                   , list :: Bool
+                   , fork :: Bool
+                   , ask :: Bool }
+defaultParameter :: Parameter
+defaultParameter = P Nothing [] False False False
 
 data Info = I { cm :: Command  -- the command
               , sf :: FilePath -- the path, where the MData is saved
