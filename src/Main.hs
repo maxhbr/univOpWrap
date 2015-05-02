@@ -12,6 +12,12 @@ progName = "univOpWrap"
 usage, version :: IO ()
 usage   = putStrLn $ unlines
   [ "Usage: " ++ progName ++ " [-f] [-a] [-t] cmd [-l] [-h] [arg [arg [ ...]]]"
+  , "   -f : fork the process"
+  , "   -a : ask, wether to run the command on the found file"
+  , "   -t : activate the TUI (not implemented yet)"
+  , "   -l : list all files corresponding to a command"
+  , "   -h : show this text"
+  , ""
   , "Written by: Maximilian Huber (mail@maximilian-huber.de)" ]
 version = putStrLn $ progName ++ " 0.1.0.0"
 

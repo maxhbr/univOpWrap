@@ -1,5 +1,3 @@
-At the moment, this is **only an idea**. It can be used.
-
 univOpWrap:
 -----------
 This small program wants to provide a simple and universal wrapper for shell
@@ -25,7 +23,7 @@ TODO:
 USAGE:
 ------
 
-    /PATH/TO/univOpWrap [-f] [-a] cmd [-l] [-h] [arg [arg [ ...]]]
+    /PATH/TO/univOpWrap [-f] [-a] [-t] cmd [-l] [-h] [arg [arg [ ...]]]
 
 Simply add the following to yourt aliasrc:
 
