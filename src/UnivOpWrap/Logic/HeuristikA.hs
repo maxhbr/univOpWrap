@@ -5,7 +5,6 @@ module UnivOpWrap.Logic.HeuristikA
 
 import System.HsTColors
 import UnivOpWrap.Common
-import UnivOpWrap.Logic.Common
 
 matchCharM :: Char -> MData -> MData
 matchCharM _ m@(Non _)                         = m
@@ -20,4 +19,4 @@ matchStringM []     = id
 matchStringM (c:cs) = matchStringM cs . matchCharM c
 
 matchStringMs :: String -> [MData] -> [MData]
-matchStringMs = matcherMap matchStringM
+matchStringMs s = map $ matchStringM s

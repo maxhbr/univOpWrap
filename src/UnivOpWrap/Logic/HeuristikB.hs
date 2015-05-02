@@ -6,7 +6,6 @@ module UnivOpWrap.Logic.HeuristikB
 import Data.List (isPrefixOf)
 import System.HsTColors
 import UnivOpWrap.Common
-import UnivOpWrap.Logic.Common
 
 matchStringM :: String -> MData -> MData
 matchStringM s = let
@@ -26,4 +25,4 @@ matchStringM s = let
     matchStringM' (words s)
 
 matchStringMs :: String -> [MData] -> [MData]
-matchStringMs = matcherMap matchStringM
+matchStringMs s = map $ matchStringM s
