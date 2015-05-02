@@ -8,8 +8,8 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module UnivOpWrap.Logic
-  ( findMatches,   findMatchesI
-  , findBestMatch, findBestMatchI
+  ( findMatchesI
+  , findBestMatchI
   ) where
 
 import System.FilePath
@@ -40,11 +40,13 @@ concatMatcherMs f g a l = f a l ++ g a l
 onlyFilenameMs :: (a -> [MData] -> [MData]) -> a -> [MData] -> [MData]
 onlyFilenameMs f a l = let
     scanUpToBasename :: MData -> MData
-    scanUpToBasename m@(Non _) = m
-    scanUpToBasename m         = m{pr'=(takeDirectory (pr2 m) ++ "/"
-                                       ,takeFileName (pr2 m))}
+    scanUpToBasename m@(Non _)  = m
+    scanUpToBasename m@M{pr'=t} = let
+        t' = splitFileName (snd t)
+      in
+        m{pr'=(fst t ++ fst t', snd t')}
   in
     f a (map scanUpToBasename l)
 
-firstFilenameMs :: (a -> [MData] -> [MData]) -> a -> [MData] -> [MData] 
+firstFilenameMs :: (a -> [MData] -> [MData]) -> a -> [MData] -> [MData]
 firstFilenameMs f = concatMatcherMs (onlyFilenameMs f) f
