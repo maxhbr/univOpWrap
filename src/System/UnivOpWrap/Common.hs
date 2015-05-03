@@ -77,8 +77,8 @@ lst (Non m@M{lst'=d}) = d
 lst (Non (Non _))     = error "MData should not be nested"
 
 isNotNon :: MData -> Bool
-isNotNon m@M{}   = True
 isNotNon (Non _) = False
+isNotNon _       = True
 
 instance Eq MData where
   M{fn'=f} == M{fn'=f'} = f' == f
@@ -124,8 +124,8 @@ newMData f i = do
 -- |makes paths absolute
 cleanPath :: String -> IO String
 cleanPath p | "~" `isPrefixOf` p = do
-    homePath <- getHomeDirectory
-    return $ normalise $ addTrailingPathSeparator homePath ++ tail p
-             | otherwise          = do
-    pathMaybeWithDots <- absolute_path p
-    return $ fromJust $ guess_dotdot pathMaybeWithDots
+  homePath <- getHomeDirectory
+  return $ normalise $ addTrailingPathSeparator homePath ++ tail p
+           | otherwise          = do
+  pathMaybeWithDots <- absolute_path p
+  return $ fromJust $ guess_dotdot pathMaybeWithDots

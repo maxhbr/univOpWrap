@@ -14,11 +14,12 @@ IDEAS/PLANS:
 
 TODO:
 -----
- * implement better heuristics
+ * ~~implement better heuristics~~
+ * implement TUI for interactive search
  * testing
  * faster?
- * save as binary file / faster parsing / use a db?
- * use cereal for faster / real serialization
+ * ~~save as binary file / faster parsing / use a db?~~
+ * ~~use cereal for faster / real serialization~~
 
 USAGE:
 ------
