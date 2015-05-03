@@ -27,7 +27,7 @@ import System.HsTColors
 saveFile :: Command -> IO FilePath
 saveFile (C c) = do
     s <- cleanPath saveDir
-    return $ s </> show (hash (show c))
+    return $ s </> ("uow" ++ show (hash (show c)))
 
 --------------------------------------------------------------------------------
 --  Data definitions
