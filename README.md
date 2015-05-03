@@ -41,3 +41,7 @@ if you want to be asked, wether you realy want to call the command on the file,
 use
 
     alias p="/PATH/TO/univOpWrap -a llpp"
+
+Filetype dependent commands are given like:
+
+    alias p="/PATH/TO/univOpWrap \".djvu:zathura llpp\""

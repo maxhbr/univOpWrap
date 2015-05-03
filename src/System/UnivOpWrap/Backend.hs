@@ -24,7 +24,7 @@ getInfo c = do
         cont <- readFile s
         return I { cm = c
                  , sf = s
-                 , md = mapMaybe mFromLine (lines (unpack cont)) }
+                 , md = nub $ mapMaybe mFromLine (lines (unpack cont)) }
       else
         return I { cm = c
                  , sf = s

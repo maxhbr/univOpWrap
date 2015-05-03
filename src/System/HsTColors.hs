@@ -115,6 +115,20 @@ cyanTrace = colorTrace ANSICyan
 whiteTrace = colorTrace ANSIWhite
 
 --------------------------------------------------------------------------------
+--  IdTrace colored strings
+colorIdTrace :: ANSIColor -> String -> String
+colorIdTrace a s = trace (colorString a s) s
+
+redIdTrace, greenIdTrace, yellowIdTrace, blueIdTrace, magentaIdTrace, cyanIdTrace, whiteIdTrace :: String -> String
+redIdTrace = colorIdTrace ANSIRed
+greenIdTrace = colorIdTrace ANSIGreen
+yellowIdTrace = colorIdTrace ANSIYellow
+blueIdTrace = colorIdTrace ANSIBlue
+magentaIdTrace = colorIdTrace ANSIMagenta
+cyanIdTrace = colorIdTrace ANSICyan
+whiteIdTrace = colorIdTrace ANSIWhite
+
+--------------------------------------------------------------------------------
 --  Show colored things
 colorShow :: Show a => ANSIColor -> a -> String
 colorShow c s = colorString c (show s)
