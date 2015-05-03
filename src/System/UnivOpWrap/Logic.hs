@@ -13,7 +13,6 @@ module System.UnivOpWrap.Logic
   ) where
 
 import           System.FilePath
-import           System.HsTColors
 import           System.UnivOpWrap.Common
 import qualified System.UnivOpWrap.Logic.HeuristikA as A
 import qualified System.UnivOpWrap.Logic.HeuristikB as B

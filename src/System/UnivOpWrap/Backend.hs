@@ -11,8 +11,6 @@ import System.Directory
 import System.FilePath
 import Data.List
 import Data.Time
-import Data.Maybe
-import Data.Text (pack, unpack)
 import Data.ByteString.Lazy hiding (map)
 import GHC.Generics
 import Data.Aeson
@@ -42,7 +40,7 @@ mdataToPre (Non m)                   = mdataToPre m
 mdataToPre m@M{fn'=f,met'=m',lst'=l} = MPre f m' (show l)
 
 infoFromPre :: Maybe InfoPre -> Info
-infoFromPre Nothing            = undefined
+infoFromPre Nothing            = undefined -- throw an error?
 infoFromPre (Just (IPre c ms)) = I c $ map mdataFromPre ms
 infoToPre :: Info -> InfoPre
 infoToPre i@I{cm=c,md=ms} = IPre c $ map mdataToPre ms

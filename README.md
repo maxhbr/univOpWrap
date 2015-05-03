@@ -1,9 +1,9 @@
 univOpWrap:
 -----------
-This small program wants to provide a simple and universal wrapper for shell
-commands. The Goal is to build a universal alternative to 
- - https://github.com/rupa/v and
- - https://github.com/rupa/z
+This small program wants to provide a simple and generic alternative to
+ - https://github.com/rupa/v for `vim` and
+ - https://github.com/rupa/z for `cd`
+which can be for example used to wrap the pdf-viewer command.
 
 IDEAS/PLANS:
 ------

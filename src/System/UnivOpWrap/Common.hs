@@ -18,10 +18,8 @@ import Data.Hashable
 import System.Path.NameManip (guess_dotdot, absolute_path)
 import Data.Maybe
 import GHC.Generics
-import Data.Aeson
 
 import System.UnivOpWrap.Config
-import System.HsTColors
 
 
 saveFile :: Command -> IO FilePath
@@ -57,24 +55,24 @@ data MData = M { fn'  :: FilePath        -- path of file
                , lst' :: Day             -- last opened
                } | Non MData
 fn :: MData -> FilePath
-fn m@M{fn'=f}       = f
-fn (Non m@M{fn'=f}) = f
-fn (Non (Non _))    = error "MData should not be nested"
+fn M{fn'=f}       = f
+fn (Non M{fn'=f}) = f
+fn (Non (Non _))  = error "MData should not be nested"
 pr :: MData -> (String, String)
-pr m@M{pr'=t}       = t
-pr (Non m@M{pr'=t}) = t
-pr (Non (Non _))    = error "MData should not be nested"
+pr M{pr'=t}       = t
+pr (Non M{pr'=t}) = t
+pr (Non (Non _))  = error "MData should not be nested"
 pr1, pr2 :: MData -> String
 pr1 = fst . pr
 pr2 = snd . pr
 met :: MData -> Int
-met m@M{met'=v}       = v
-met (Non m@M{met'=v}) = v
-met (Non (Non _))     = error "MData should not be nested"
+met M{met'=v}       = v
+met (Non M{met'=v}) = v
+met (Non (Non _))   = error "MData should not be nested"
 lst :: MData -> Day
-lst m@M{lst'=d}       = d
-lst (Non m@M{lst'=d}) = d
-lst (Non (Non _))     = error "MData should not be nested"
+lst M{lst'=d}       = d
+lst (Non M{lst'=d}) = d
+lst (Non (Non _))   = error "MData should not be nested"
 
 isNotNon :: MData -> Bool
 isNotNon (Non _) = False
