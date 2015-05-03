@@ -1,10 +1,11 @@
+{-# LANGUAGE DeriveGeneric #-}
 module System.UnivOpWrap.Common
   ( saveFile
   , Parameter (..), defaultParameter
   , Info (..)
-  , Command (..)
+  , Command (..), commandFromString
   , MData (..), fn, pr, pr1, pr2, met, lst, isNotNon
-  , newMData, mToLine, mFromLine
+  , newMData
   , cleanPath
   )where
 
@@ -16,6 +17,8 @@ import Data.List
 import Data.Hashable
 import System.Path.NameManip (guess_dotdot, absolute_path)
 import Data.Maybe
+import GHC.Generics
+import Data.Aeson
 
 import System.UnivOpWrap.Config
 import System.HsTColors
@@ -24,7 +27,7 @@ import System.HsTColors
 saveFile :: Command -> IO FilePath
 saveFile (C c) = do
     s <- cleanPath saveDir
-    return $ s </> show (hash c)
+    return $ s </> show (hash (show c))
 
 --------------------------------------------------------------------------------
 --  Data definitions
@@ -40,14 +43,13 @@ defaultParameter :: Parameter
 defaultParameter = P Nothing [] False False False False False
 
 data Info = I { cm :: Command  -- the command
-              , sf :: FilePath -- the path, where the MData is saved
               , md :: [MData]  -- the corresponding MData
               } deriving (Show)
  
-data Command = C FilePath
-  deriving (Eq)
+data Command = C [(String,FilePath)]
+  deriving (Eq, Generic)
 instance Show Command where
-    show (C c) = c
+    show (C cps) = show cps
 
 data MData = M { fn'  :: FilePath        -- path of file
                , pr'  :: (String,String) -- start + end
@@ -98,30 +100,26 @@ instance Show MData where
 --------------------------------------------------------------------------------
 --  Functions
 
+commandFromString :: String -> Command
+commandFromString s = let
+    getCmdPerFT :: [String] -> [(String,FilePath)]
+    getCmdPerFT []             = []
+    getCmdPerFT (('.':cs):css) = let
+        spltCmd :: String -> [String]
+        spltCmd s = case dropWhile (==':') s of
+            "" -> []
+            s' -> w : words s''
+                  where (w, s'') = break (==':') s'
+        splt = spltCmd cs
+      in ('.' : head splt,  tail $ splt !! 1) : getCmdPerFT css
+    getCmdPerFT (c:css)        = ("",c) : getCmdPerFT css
+  in C . getCmdPerFT $ words s
+
 newMData :: FilePath -> Int -> IO MData
 newMData f i = do
   f' <- cleanPath f
   t <- getCurrentTime
   return $ M f ("",f') i (utctDay t)
-
-mToLine :: MData -> String
-mToLine m = unwords [ show (lst m)
-                    , show (met m)
-                    , fn m
-                    ]
-
-mFromLine :: String -> Maybe MData
-mFromLine l = let
-    ws = words l
-  in if length ws >= 3
-    then let
-        f = unwords (drop 2 ws)
-      in Just M { fn'  = f
-                , pr'  = ("",f)
-                , met' =  read (ws!!1)
-                , lst' = utctDay $ read $ head ws ++ " 00:00:00.00000 UTC"
-                }
-    else Nothing
 
 -- |makes paths absolute
 cleanPath :: String -> IO String

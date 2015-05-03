@@ -61,21 +61,14 @@ tuiRoutine _ i = do
 runCmd :: Bool -> Command -> MData -> IO(Maybe ProcessHandle)
 runCmd b c m = let
     -- l = show c ++ " \"" ++ fn m ++ "\""
-    getCmdPerFT :: [String] -> String -> String
-    getCmdPerFT [] _               = "echo \"no cmd found for:\"; echo"
-    getCmdPerFT (('.':cs):css) ext = let
-        spltCmd :: String -> [String]
-        spltCmd s = case dropWhile (==':') s of
-            "" -> []
-            s' -> w : words s''
-                  where (w, s'') = break (==':') s'
-        splt = spltCmd cs
-      in if ext == '.' : head splt
-        then tail $ splt !! 1
-        else getCmdPerFT css ext
-    getCmdPerFT (c:css) _ = c
+    getCmdPerFT :: Command -> String -> String
+    getCmdPerFT (C []) _               = "echo \"no cmd found for:\"; echo"
+    getCmdPerFT (C (("",c):css)) ext'  = c
+    getCmdPerFT (C ((ext,c):css)) ext' = if ext == ext'
+      then c
+      else getCmdPerFT (C css) ext
   in do
-    let l = getCmdPerFT (words (show c)) (takeExtension (fn m))
+    let l = getCmdPerFT c (takeExtension (fn m))
          ++ " \"" ++ fn m ++ "\"" 
     putStrLn l
     ans <- if b
