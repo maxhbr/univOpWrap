@@ -24,7 +24,7 @@ TODO:
 USAGE:
 ------
 
-    /PATH/TO/univOpWrap [-f] [-a] [-t] cmd [-l] [-h] [arg [arg [ ...]]]
+    /PATH/TO/univOpWrap [-f] [-a] [-t] [-s] cmd [-l] [-h] [arg [arg [ ...]]]
 
 Simply add the following to yourt aliasrc:
 
