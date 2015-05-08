@@ -27,7 +27,8 @@ import System.UnivOpWrap.Logic
 import System.UnivOpWrap.Tui
 
 univOpWrap :: Parameter -> IO()
-univOpWrap p = do
+univOpWrap p@P{sanitize=True} = getInfo (fromJust (cmP p)) >>= sanitizeInfo
+univOpWrap p                  = do
     i <- getInfo (fromJust (cmP p))
     case p of
       P{list = True} -> mapM_ print $ md i

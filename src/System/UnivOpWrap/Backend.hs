@@ -4,6 +4,7 @@ module System.UnivOpWrap.Backend
   , updateInfo
   , saveInfo
   , updAndSvInfo
+  , sanitizeInfo
   ) where
 
 import Prelude hiding (readFile, writeFile)
@@ -15,6 +16,8 @@ import Data.ByteString.Lazy hiding (map)
 import GHC.Generics
 import Data.Aeson
 import System.UnivOpWrap.Common
+import Data.Maybe
+import Control.Monad
 
 data InfoPre = IPre Command [MDataPre] deriving Generic
 data MDataPre = MPre { mPrefn  :: String
@@ -73,8 +76,7 @@ updateInfo m i@I{md=ms} = let
                                        : updateMData' (Non m) ms
                            | otherwise = m'{met' = mDown (met m')}
                                        : updateMData' m ms
-  in
-    i { md = sort (updateMData' m ms)}
+  in i{ md = sort (updateMData' m ms)}
 
 saveInfo :: Info -> IO ()
 saveInfo i = do
@@ -87,12 +89,10 @@ updAndSvInfo m = saveInfo . updateInfo m
 
 -- |Delets unused / notexistend files
 sanitizeInfo :: Info -> IO ()
-sanitizeInfo = undefined
---     f Non       = return Non
---     f m@M{fn=f} = do
---       ex <- doesFileExist f
---       if ex
---         then return m
---         else return Non
---   in
---     loadMeta c >>= mapM f >>= saveMeta c
+sanitizeInfo i = let
+    f m = do
+      ex <- doesFileExist (fn m)
+      if ex
+        then return $ Just m
+        else return Nothing
+  in mapM f (md i) >>= (\newMDs -> saveInfo i{md=catMaybes newMDs})

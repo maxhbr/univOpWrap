@@ -30,15 +30,16 @@ saveFile (C c) = do
 --------------------------------------------------------------------------------
 --  Data definitions
 
-data Parameter = P { cmP   :: Maybe Command
-                   , argsP :: [String]
-                   , list  :: Bool
-                   , fork  :: Bool
-                   , ask   :: Bool
-                   , tui   :: Bool
-                   , dbg   :: Bool }
+data Parameter = P { cmP      :: Maybe Command
+                   , argsP    :: [String]
+                   , list     :: Bool
+                   , fork     :: Bool
+                   , ask      :: Bool
+                   , tui      :: Bool
+                   , sanitize :: Bool
+                   , dbg      :: Bool }
 defaultParameter :: Parameter
-defaultParameter = P Nothing [] False False False False False
+defaultParameter = P Nothing [] False False False False False False
 
 data Info = I { cm :: Command  -- the command
               , md :: [MData]  -- the corresponding MData

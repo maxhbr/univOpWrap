@@ -16,6 +16,7 @@ usage   = putStrLn $ unlines
   , "   -a : ask, wether to run the command on the found file"
   , "   -t : activate the TUI (not implemented yet)"
   , "   -l : list all files corresponding to a command"
+  , "   -s : sanitize the information / forget nonexisting files"
   , "   -h : show this text"
   , ""
   , "Written by: Maximilian Huber (mail@maximilian-huber.de)" ]
@@ -32,6 +33,7 @@ main = let
     parse p ("-a":args)                     = parse p{ask=True} args
     parse p ("-d":args)                     = parse p{dbg=True} args
     parse p ("-t":args)                     = parse p{tui=True} args
+    parse p ("-s":args)                     = parse p{sanitize=True} args
     parse p (a:args)    | isNothing (cmP p) = parse p{cmP=Just (commandFromString a)} args
                         | otherwise         = parse p{argsP=argsP p ++ [a]} args
     parse p []          | isNothing (cmP p) = redPrint "No command specified" >> exitWith (ExitFailure 1)
