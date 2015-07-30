@@ -6,7 +6,6 @@
 -- partly stolen from https://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours/Building_a_REPL
 --
 --------------------------------------------------------------------------------
-{-# LANGUAGE CPP #-}
 module System.UnivOpWrap.Repl
     (runRepl
     ) where
@@ -47,10 +46,10 @@ prompt ms = let
         flushStr :: String -> IO ()
         flushStr str = putStr str >> hFlush stdout
       in do
-          flushStr prompt
-          result <- getLine
-          print ANSINone
-          return result
+        flushStr prompt
+        result <- getLine
+        print ANSINone
+        return result
   in printBest ms >> readPrompt promptText
 
 evalAndUpdate :: [MData] -> String -> IO [MData]
@@ -68,13 +67,12 @@ evalAndUpdate ms expr = let
       Right int -> [nub ms !! (int -1)]
 
 loop :: [MData] -> IO MData
-loop [] = error "loop with empty list"
+loop [] = error "no more possible matches :("
 loop ms = let
     nubMs = nub ms
   in if length nubMs == 1
     then return $ head nubMs
-    else do
-      prompt nubMs >>= evalAndUpdate ms >>= loop
+    else prompt nubMs >>= evalAndUpdate ms >>= loop
 
 runRepl :: String -> Info -> IO MData
 runRepl arg i = let

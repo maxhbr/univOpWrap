@@ -69,13 +69,6 @@ replRoutine b arg i = do
               ph <- runCmd b (cm i) mtch
               return (updateInfo mtch i, ph)
 
--- tuiRoutine :: Bool -> Info -> IO(Info, Maybe ProcessHandle)
--- tuiRoutine _ i = do
---     m <- runTui [] i
---     case m of
---       Nothing -> exitSuccess
---       Just _  -> return undefined
-
 runCmd :: Bool -> Command -> MData -> IO(Maybe ProcessHandle)
 runCmd b (C cts) m = let
     getCmdPerFT :: [(String,FilePath)] -> String -> String
