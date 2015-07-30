@@ -34,20 +34,16 @@ or if you do not want to overwrite the command:
 
     alias p="/PATH/TO/univOpWrap llpp"
 
-### advanced USAGE:
-
-if you want to start a simple REPL, until the search is unique add the parameter
-`-r`.
-
-if you want the process to detach, use
-
-    alias p="/PATH/TO/univOpWrap -f llpp"
-
-if you want to be asked, wether you realy want to call the command on the file,
-use
-
-    alias p="/PATH/TO/univOpWrap -a llpp"
-
-Filetype dependent commands are given like:
+Filetype dependent commands are defined as:
 
     alias p="/PATH/TO/univOpWrap \".djvu:zathura llpp\""
+
+### advanced USAGE:
+
+* if you want to start a simple REPL, until the search is unique add the parameter
+`-r`.
+
+* if you want the process to detach, use the parameter `-f`.
+
+* if you want to be asked, wether you realy want to call the command on the file,
+use the parameter `-a`.
