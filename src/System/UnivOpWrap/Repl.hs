@@ -15,22 +15,29 @@ import System.IO
 import Data.List (nub)
 import Data.Either
 import Control.Monad
+import System.HsTColors
 import System.UnivOpWrap.Common
 import System.UnivOpWrap.Logic
 
 --------------------------------------------------------------------------------
-promptText = "univOpWrap>>> "
+promptText = "univOpWrap>>> " ++ show ANSIRed
 numOfShowedItms = 9
+maxLength = 80
 
 --------------------------------------------------------------------------------
 
 prompt ms = let
     printBest :: [MData] -> IO()
     printBest ms = let
-        notNonM = nub [m | m <- ms, isNotNon m]
+        shortenString s = let
+                       lengthDiffWithoutColor = length (uncolor s) - maxLength
+                  in if lengthDiffWithoutColor < 0
+                     then s
+                     else "..." ++ drop lengthDiffWithoutColor s
+        notNonM = nub $ takeOnlyNotNon ms
         prettyPrint (nr, Non _) = putStrLn $ "[" ++ show nr ++ "] Non"
         prettyPrint (nr, m)     = putStrLn $
-          "[" ++ show nr ++ "] " ++ pr1 m ++ pr2 m
+          "[" ++ show nr ++ "] " ++ (shortenString $ pr1 m ++ pr2 m)
       in do
         mapM_ prettyPrint $ zip [1..] $ take numOfShowedItms notNonM
         when (length notNonM > numOfShowedItms) $ putStrLn "[...]"
@@ -39,42 +46,41 @@ prompt ms = let
     readPrompt prompt = let
         flushStr :: String -> IO ()
         flushStr str = putStr str >> hFlush stdout
-      in flushStr prompt >> getLine
+      in do
+          flushStr prompt
+          result <- getLine
+          print ANSINone
+          return result
   in printBest ms >> readPrompt promptText
 
 evalAndUpdate :: [MData] -> String -> IO [MData]
 evalAndUpdate ms expr = let
     evalString :: String -> IO (Either String Int)
-    evalString s = case reads s :: [(Int, String)] of
-                     [(i, "")] -> return $ Right i
-                     _         -> return $ Left s
+    evalString (' ':s) = evalString s
+    evalString s       = case reads s :: [(Int, String)] of
+                           [(i, "")] -> return $ Right i
+                           _         -> return $ Left s
   in do
     result <- evalString expr
     return $ case result of
-      Left str  -> [m | m <- findMatches str ms, isNotNon m]
+      Left ""   -> ms
+      Left str  -> takeOnlyNotNon $ findMatches str ms
       Right int -> [nub ms !! (int -1)]
 
-loop :: [MData]
-     -> IO MData
+loop :: [MData] -> IO MData
+loop [] = error "loop with empty list"
 loop ms = let
     nubMs = nub ms
-    endCondition :: String  -- Input
-                 -> [MData] -- current data
-                 -> Bool
-    endCondition "1" _ = True
-    endCondition _ [m] = True
-    endCondition _ _   = False
-  in do
-    result <- prompt nubMs
-    if endCondition result nubMs
-      then return $ head nubMs
-      else evalAndUpdate ms result >>= loop
+  in if length nubMs == 1
+    then return $ head nubMs
+    else do
+      prompt nubMs >>= evalAndUpdate ms >>= loop
 
 runRepl :: String -> Info -> IO MData
 runRepl arg i = let
     ms = if null arg
            then md i
-           else findMatches arg (md i)
+           else takeOnlyNotNon $ findMatches arg (md i)
   in do
-    unless (null arg) (putStrLn $ promptText ++ arg)
+    unless (null arg) (putStrLn $ promptText ++ arg ++ show ANSINone)
     loop ms

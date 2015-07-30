@@ -4,7 +4,8 @@ module System.UnivOpWrap.Common
   , Parameter (..), defaultParameter
   , Info (..)
   , Command (..), commandFromString
-  , MData (..), fn, pr, pr1, pr2, met, lst, isNotNon, countNotNon
+  , MData (..), fn, pr, pr1, pr2, met, lst
+  , isNotNon, takeOnlyNotNon, countNotNon
   , newMData
   , cleanPath
   )where
@@ -86,6 +87,9 @@ countNotNon ms = let
     countNotNon' (m:ms)     i = countNotNon' ms $ i + 1
     countNotNon' []         i = i
   in countNotNon' ms 0
+
+takeOnlyNotNon :: [MData] -> [MData]
+takeOnlyNotNon ms = [m | m <- ms, isNotNon m]
 
 instance Eq MData where
   M{fn'=f} == M{fn'=f'} = f' == f
