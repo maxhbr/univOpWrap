@@ -24,7 +24,7 @@ TODO:
 USAGE:
 ------
 
-    /PATH/TO/univOpWrap [-f] [-a] [-t] [-s] cmd [-l] [-h] [arg [arg [ ...]]]
+    /PATH/TO/univOpWrap [-r] [-f] [-a] [-t] [-s] cmd [-l] [-h] [arg [arg [ ...]]]
 
 Simply add the following to yourt aliasrc:
 
@@ -33,6 +33,11 @@ Simply add the following to yourt aliasrc:
 or if you do not want to overwrite the command:
 
     alias p="/PATH/TO/univOpWrap llpp"
+
+### advanced USAGE:
+
+if you want to start a simple REPL, until the search is unique add the parameter
+`-r`.
 
 if you want the process to detach, use
 
