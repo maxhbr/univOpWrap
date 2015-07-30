@@ -14,8 +14,9 @@ IDEAS/PLANS:
 
 TODO:
 -----
+ * make `-a` work with the repl
  * ~~implement better heuristics~~
- * implement TUI for interactive search
+ * ~~implement TUI for interactive search~~
  * testing
  * faster?
  * ~~save as binary file / faster parsing / use a db?~~
@@ -40,10 +41,10 @@ Filetype dependent commands are defined as:
 
 ### advanced USAGE:
 
-* if you want to start a simple REPL, until the search is unique add the parameter
-`-r`.
+ * if you want to start a simple REPL, until the search is unique add the
+parameter `-r`.
 
-* if you want the process to detach, use the parameter `-f`.
+ * if you want the process to detach, use the parameter `-f`.
 
-* if you want to be asked, wether you realy want to call the command on the file,
-use the parameter `-a`.
+ * if you want to be asked, wether you realy want to call the command on the
+file, use the parameter `-a`. (does not work with the REPL at the moment)
