@@ -4,7 +4,7 @@ module System.UnivOpWrap.Common
   , Parameter (..), defaultParameter
   , Info (..)
   , Command (..), commandFromString
-  , MData (..), fn, pr, pr1, pr2, met, lst, isNotNon
+  , MData (..), fn, pr, pr1, pr2, met, lst, isNotNon, countNotNon
   , newMData
   , cleanPath
   )where
@@ -33,18 +33,19 @@ saveFile (C c) = do
 data Parameter = P { cmP      :: Maybe Command
                    , argsP    :: [String]
                    , list     :: Bool
+                   , repl     :: Bool
                    , fork     :: Bool
                    , ask      :: Bool
                    , tui      :: Bool
                    , sanitize :: Bool
                    , dbg      :: Bool }
 defaultParameter :: Parameter
-defaultParameter = P Nothing [] False False False False False False
+defaultParameter = P Nothing [] False False False False False False False
 
 data Info = I { cm :: Command  -- the command
               , md :: [MData]  -- the corresponding MData
               } deriving (Show)
- 
+
 data Command = C [(String,FilePath)]
   deriving (Eq, Generic)
 instance Show Command where
@@ -78,6 +79,13 @@ lst (Non (Non _))   = error "MData should not be nested"
 isNotNon :: MData -> Bool
 isNotNon (Non _) = False
 isNotNon _       = True
+
+countNotNon :: [MData] -> Int
+countNotNon ms = let
+    countNotNon' (Non _:ms) i = countNotNon' ms i
+    countNotNon' (m:ms)     i = countNotNon' ms $ i + 1
+    countNotNon' []         i = i
+  in countNotNon' ms 0
 
 instance Eq MData where
   M{fn'=f} == M{fn'=f'} = f' == f

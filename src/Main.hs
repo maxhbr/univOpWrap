@@ -11,7 +11,8 @@ progName :: String
 progName = "univOpWrap"
 usage, version :: IO ()
 usage   = putStrLn $ unlines
-  [ "Usage: " ++ progName ++ " [-f] [-a] [-t] cmd [-l] [-h] [arg [arg [ ...]]]"
+  [ "Usage: " ++ progName ++ " [-r] [-f] [-a] [-t] cmd [-l] [-h] [arg [arg [ ...]]]"
+  , "   -r : run as repl (if parameter not uniqly determine file)"
   , "   -f : fork the process"
   , "   -a : ask, wether to run the command on the found file"
   , "   -t : activate the TUI (not implemented yet)"
@@ -28,6 +29,7 @@ main = let
     parse _ ("-h":_)                        = usage
     parse _ ("-v":_)                        = version
     -- parse ["-s",c]                       = sanitizeMetaFromCommand c
+    parse p ("-r":args)                     = parse p{repl=True} args
     parse p ("-f":args)                     = parse p{fork=True} args
     parse p ("-l":args)                     = parse p{list=True} args
     parse p ("-a":args)                     = parse p{ask=True} args

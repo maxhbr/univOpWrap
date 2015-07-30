@@ -8,7 +8,8 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE CPP #-}
 module System.UnivOpWrap.Logic
-  ( findMatchesI
+  ( findMatches
+  , findMatchesI
   , findBestMatchI
   ) where
 
@@ -22,6 +23,7 @@ findMatchesI s i@I{md=ms} = i{md = findMatches s ms}
 findBestMatchI :: String -> Info -> MData
 findBestMatchI s = findBestMatch s . md
 
+-- | combine / concat matchers imported from A and B
 findMatches :: String -> [MData] -> [MData]
 findMatches = concatMatcherMs (firstFilenameMs B.matchStringMs) A.matchStringMs
 

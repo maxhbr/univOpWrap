@@ -25,6 +25,7 @@ import System.UnivOpWrap.Common as X
 import System.UnivOpWrap.Backend
 import System.UnivOpWrap.Logic
 import System.UnivOpWrap.Tui
+import System.UnivOpWrap.Repl
 
 univOpWrap :: Parameter -> IO()
 univOpWrap p@P{sanitize=True} = getInfo (fromJust (cmP p)) >>= sanitizeInfo
@@ -33,8 +34,8 @@ univOpWrap p                  = do
     case p of
       P{list = True} -> mapM_ print $ md i
       _              -> do
-        (i',ph) <- if tui p && null (argsP p)
-          then tuiRoutine (ask p) i
+        (i',ph) <- if repl p
+          then replRoutine (ask p) (unwords (argsP p)) i
           else defaultRoutine (ask p) (unwords (argsP p)) i
         _ <- when (dbg p) (print i')
         saveInfo i'
@@ -51,15 +52,29 @@ defaultRoutine b arg i = do
     case mtch of
       Non _ -> return (i, Nothing)
       _     -> do
-        ph <- runCmd b (cm i) mtch
-        return (updateInfo mtch i, ph)
+                ph <- runCmd b (cm i) mtch
+                return (updateInfo mtch i, ph)
 
-tuiRoutine :: Bool -> Info -> IO(Info, Maybe ProcessHandle)
-tuiRoutine _ i = do
-    m <- runTui [] i
-    case m of
-      Nothing -> exitSuccess
-      Just _  -> return undefined
+replRoutine :: Bool -> String -> Info -> IO(Info, Maybe ProcessHandle)
+replRoutine b arg i = do
+  ex <- doesFileExist arg
+  mtch <- if ex
+          then do
+            cleanedPath <- cleanPath arg
+            newMData cleanedPath 100
+          else runRepl arg i
+  case mtch of
+    Non _ -> return (i, Nothing)
+    _     -> do
+              ph <- runCmd b (cm i) mtch
+              return (updateInfo mtch i, ph)
+
+-- tuiRoutine :: Bool -> Info -> IO(Info, Maybe ProcessHandle)
+-- tuiRoutine _ i = do
+--     m <- runTui [] i
+--     case m of
+--       Nothing -> exitSuccess
+--       Just _  -> return undefined
 
 runCmd :: Bool -> Command -> MData -> IO(Maybe ProcessHandle)
 runCmd b (C cts) m = let
